@@ -14,6 +14,8 @@ type PostsRepo interface {
 	Insert(data models.Post) error
 	GetAll() ([]models.Post, error)
 	GetById(id int) (*models.Post, error)
+	GetAllPreloaded() ([]models.Post, error)
+	GetByIdPreloaded(id int) (*models.Post, error)
 	Update(data models.Post) error
 	Delete(id int) error
 }
@@ -28,11 +30,26 @@ func (r *postsRepo) Insert(data models.Post) error {
 
 func (r *postsRepo) GetAll() ([]models.Post, error) {
     var posts []models.Post
-    err := r.DB.Preload("Tags").Find(&posts).Error
+    err := r.DB.Find(&posts).Error
     return posts, err
 }
 
 func (r *postsRepo) GetById(id int) (*models.Post, error) {
+	var post models.Post
+    err := r.DB.First(&post, id).Error
+	if err == gorm.ErrRecordNotFound {
+        return nil, nil
+    }
+    return &post, err
+}
+
+func (r *postsRepo) GetAllPreloaded() ([]models.Post, error) {
+    var posts []models.Post
+    err := r.DB.Preload("Tags").Find(&posts).Error
+    return posts, err
+}
+
+func (r *postsRepo) GetByIdPreloaded(id int) (*models.Post, error) {
 	var post models.Post
     err := r.DB.Preload("Tags").First(&post, id).Error
 	if err == gorm.ErrRecordNotFound {
