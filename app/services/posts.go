@@ -11,7 +11,13 @@ type postsService struct {
 	tagsRepo  repositories.TagsRepo
 }
 
-type PostsService interface{}
+type PostsService interface {
+	Insert(payload models.AddPost) error
+	GetAll() ([]models.Post, error)
+	GetById(id int) (*models.Post, error)
+	Update(id int, payload models.UpdatePost) error
+	Delete(id int) error
+}
 
 func NewPostsService(postsRepo repositories.PostsRepo, tagsRepo repositories.TagsRepo) PostsService {
 	return &postsService{
