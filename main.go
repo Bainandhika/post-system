@@ -9,7 +9,7 @@ import (
 
 func main() {
 	configs.InitConfig()
-	
+
 	dbInstance, err := connections.InitDB()
 	if err != nil {
         log.Fatal(err)
