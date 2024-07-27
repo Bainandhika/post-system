@@ -1,0 +1,47 @@
+package logger
+
+import (
+	"log"
+	"os"
+)
+
+var (
+	Info     *log.Logger
+	Debug    *log.Logger
+	Warning  *log.Logger
+	Error    *log.Logger
+	file     *os.File
+	fileName string
+)
+
+type LoggerConfig struct {
+	LogPath string
+}
+
+func (l *LoggerConfig) createLogFile() error {
+	fileName = l.LogPath + "/post-system.log"
+
+	var err error
+	file, err = os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (l *LoggerConfig) InitLogger() {
+	err := l.createLogFile()
+	if err != nil {
+		log.Fatalln("Error create post-system log file: " + err.Error())
+	}
+
+	flag := log.LstdFlags | log.Llongfile
+
+	Info = log.New(file, "INFO:  ", flag)
+	Warning = log.New(file, "WARNING: ", flag)
+	Error = log.New(file, "ERROR: ", flag)
+	Debug = log.New(file, "DEBUG: ", flag)
+
+	Info.Printf("post-system new start!")
+}
