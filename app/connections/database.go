@@ -13,7 +13,7 @@ import (
 	"gorm.io/gorm/logger"
 )
 
-func InitDB() error {
+func InitDB() (*gorm.DB, error) {
 	dbConfig := configs.DB
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable",
 		dbConfig.Host, dbConfig.User, dbConfig.Password, dbConfig.Name, dbConfig.Port)
@@ -21,7 +21,7 @@ func InitDB() error {
 	fileName := configs.App.LogPath + "/invoice-system.log"
 	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer file.Close()
 
@@ -36,18 +36,18 @@ func InitDB() error {
 		},
 	)
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+	dbConnection, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		PrepareStmt: true,
 		Logger:      gormLogger,
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	err = db.AutoMigrate(&models.Post{}, &models.Tag{})
+	err = dbConnection.AutoMigrate(&models.Post{}, &models.Tag{})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return dbConnection, nil
 }
