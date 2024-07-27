@@ -31,7 +31,7 @@ var (
 	DB  DatabaseConfig
 )
 
-func InitConfig(path string) {
+func InitConfig() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatalln("Error loading .env file: " + err.Error())
