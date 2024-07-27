@@ -7,8 +7,9 @@ import (
 )
 
 type postsService struct {
-	postsRepo repositories.PostsRepo
-	tagsRepo  repositories.TagsRepo
+	postsRepo    repositories.PostsRepo
+	tagsRepo     repositories.TagsRepo
+	postTagsRepo repositories.PostTagsRepo
 }
 
 type PostsService interface {
@@ -19,28 +20,32 @@ type PostsService interface {
 	Delete(id int) error
 }
 
-func NewPostsService(postsRepo repositories.PostsRepo, tagsRepo repositories.TagsRepo) PostsService {
+func NewPostsService(
+	postsRepo repositories.PostsRepo,
+	tagsRepo repositories.TagsRepo,
+	postTagsRepo repositories.PostTagsRepo) PostsService {
 	return &postsService{
 		postsRepo: postsRepo,
 		tagsRepo:  tagsRepo,
+		postTagsRepo: postTagsRepo,
 	}
 }
 
 func (s *postsService) Insert(payload models.AddPost) error {
-    postData := models.Post{Title: payload.Title, Content: payload.Content}
+	postData := models.Post{Title: payload.Title, Content: payload.Content}
 
-    for _, label := range payload.Tags {
-        tag, err := s.tagsRepo.GetByLabel(label)
-        if err != nil {
-            return err
-        }
-        if tag == nil {
-            newTag := models.Tag{Label: label}
+	for _, label := range payload.Tags {
+		tag, err := s.tagsRepo.GetByLabel(label)
+		if err != nil {
+			return err
+		}
+		if tag == nil {
+			newTag := models.Tag{Label: label}
 			postData.Tags = append(postData.Tags, newTag)
-        }
-    }
+		}
+	}
 
-    return s.postsRepo.Insert(postData)
+	return s.postsRepo.Insert(postData)
 }
 func (s *postsService) GetAll() ([]models.Post, error) {
 	return s.postsRepo.GetAllPreloaded()
@@ -93,6 +98,11 @@ func (s *postsService) Delete(id int) error {
 		return err
 	}
 	if postData != nil {
+		err := s.postTagsRepo.DeleteTagsByPostID(id)
+		if err != nil {
+			return err
+		}
+
 		return s.postsRepo.Delete(id)
 	} else {
 		return errors.New("post data not found")

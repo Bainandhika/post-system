@@ -12,8 +12,9 @@ import (
 func SetUpRoutes(db *gorm.DB) *gin.Engine {
 	postsRepo := repositories.NewPostsRepo(db)
 	tagsRepo := repositories.NewTagsRepo(db)
+	postTagsRepo := repositories.NewPostTagsRepo(db)
 
-	postsService := services.NewPostsService(postsRepo, tagsRepo)
+	postsService := services.NewPostsService(postsRepo, tagsRepo, postTagsRepo)
 	postsHandler := handlers.NewPostsHandler(postsService)
 
 	router := gin.Default()
