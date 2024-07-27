@@ -27,27 +27,21 @@ func NewPostsService(postsRepo repositories.PostsRepo, tagsRepo repositories.Tag
 }
 
 func (s *postsService) Insert(payload models.AddPost) error {
-	postData := models.Post{Title: payload.Title, Content: payload.Content}
+    postData := models.Post{Title: payload.Title, Content: payload.Content}
 
-	for _, label := range payload.Tags {
-		tag, err := s.tagsRepo.GetByLabel(label)
-		if err != nil {
-			return err
-		}
-		if tag == nil {
-			tag = &models.Tag{Label: label}
-			err = s.tagsRepo.Insert(*tag)
-			if err != nil {
-				return err
-			}
-		}
+    for _, label := range payload.Tags {
+        tag, err := s.tagsRepo.GetByLabel(label)
+        if err != nil {
+            return err
+        }
+        if tag == nil {
+            newTag := models.Tag{Label: label}
+			postData.Tags = append(postData.Tags, newTag)
+        }
+    }
 
-		postData.Tags = append(postData.Tags, *tag)
-	}
-
-	return s.postsRepo.Insert(postData)
+    return s.postsRepo.Insert(postData)
 }
-
 func (s *postsService) GetAll() ([]models.Post, error) {
 	return s.postsRepo.GetAllPreloaded()
 }
