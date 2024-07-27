@@ -18,7 +18,7 @@ type PostsRepo interface {
 	Delete(id int) error
 }
 
-func NewPostRepo(db *gorm.DB) PostsRepo {
+func NewPostsRepo(db *gorm.DB) PostsRepo {
     return &postsRepo{DB: db}
 }
 
