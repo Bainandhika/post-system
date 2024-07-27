@@ -17,6 +17,7 @@ type PostsRepo interface {
 	GetAllPreloaded() ([]models.Post, error)
 	GetByIdPreloaded(id int) (*models.Post, error)
 	Update(data models.Post) error
+	ReplaceAssociation(postData models.Post, newTags []models.Tag) error
 	Delete(id int) error
 }
 
@@ -66,3 +67,6 @@ func (r *postsRepo) Delete(id int) error {
     return r.DB.Delete(&models.Post{}, id).Error
 }
 
+func (r *postsRepo) ReplaceAssociation(postData models.Post, newTags []models.Tag) error {
+	return r.DB.Model(&postData).Association("tags").Replace(newTags)
+}
