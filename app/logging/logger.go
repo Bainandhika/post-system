@@ -1,4 +1,4 @@
-package logger
+package logging
 
 import (
 	"log"
@@ -7,8 +7,6 @@ import (
 
 var (
 	Info     *log.Logger
-	Debug    *log.Logger
-	Warning  *log.Logger
 	Error    *log.Logger
 	file     *os.File
 	fileName string
@@ -39,9 +37,7 @@ func (l *LoggerConfig) InitLogger() {
 	flag := log.LstdFlags | log.Llongfile
 
 	Info = log.New(file, "INFO:  ", flag)
-	Warning = log.New(file, "WARNING: ", flag)
 	Error = log.New(file, "ERROR: ", flag)
-	Debug = log.New(file, "DEBUG: ", flag)
 
 	Info.Printf("post-system new start!")
 }
