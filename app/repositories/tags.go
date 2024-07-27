@@ -11,11 +11,16 @@ type tagsRepo struct {
 }
 
 type TagsRepo interface {
+	Insert(data models.Tag) error
 	GetByLabel(label string) (*models.Tag, error)
 }
 
 func NewTagsRepo(db *gorm.DB) TagsRepo {
 	return &tagsRepo{DB: db}
+}
+
+func (r *tagsRepo) Insert(data models.Tag) error {
+    return r.DB.Create(&data).Error
 }
 
 func (r *tagsRepo) GetByLabel(label string) (*models.Tag, error) {
