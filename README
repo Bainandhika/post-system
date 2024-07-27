@@ -1,0 +1,54 @@
+# Post System
+
+This is a simple RESTful API for managing posts using GoLang, Gorilla Mux, and GORM.
+
+## Getting Started
+
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+
+### Prerequisites
+
+- GoLang
+- Gin
+- GORM
+- PostgreSQL
+
+### Installing
+
+Clone the repository:
+git clone https://github.com/your-username/post-system.git
+
+Navigate to the project directory:
+cd post-system
+
+Install the required packages:
+go mod tidy
+
+### Configuration
+Create a .env file in the root of the project and add your database credentials:
+APP_HOST=localhost
+APP_PORT=8000
+APP_LOG_PATH=logs
+
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_USER=admin
+DATABASE_PASSWORD=
+DATABASE_NAME=post_system
+
+### Running the application
+Build and run the application:
+go build -o main
+./main
+
+The application will start listening on localhost:8080.
+
+### API Endpoints
+GET /api/posts: Get all posts
+POST /api/posts: Create a new post
+GET /api/posts/{id}: Get a post by ID
+PUT /api/posts/{id}: Update a post by ID
+DELETE /api/posts/{id}: Delete a post by ID
+
+### Authors
+Bainandhika
