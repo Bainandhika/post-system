@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"post-system/app/configs"
 	"post-system/app/connections"
@@ -9,6 +10,7 @@ import (
 
 func main() {
 	configs.InitConfig()
+	appConfig := configs.App
 
 	dbInstance, err := connections.InitDB()
 	if err != nil {
@@ -22,5 +24,5 @@ func main() {
 	defer dbConnection.Close()
 
 	router := routes.SetUpRoutes(dbInstance)
-	router.Run(":8080")
+	router.Run(fmt.Sprintf("%s:%d", appConfig.Host, appConfig.Port))
 }
