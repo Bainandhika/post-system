@@ -15,8 +15,8 @@ import (
 
 func InitDB() (*gorm.DB, error) {
 	dbConfig := configs.DB
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable",
-		dbConfig.Host, dbConfig.User, dbConfig.Password, dbConfig.Name, dbConfig.Port)
+	dsn := fmt.Sprintf("host=%s dbname=%s port=%d user=%s password=%s sslmode=disable",
+		dbConfig.Host, dbConfig.Name, dbConfig.Port, dbConfig.User, dbConfig.Password)
 
 	fileName := configs.App.LogPath + "/post-system.log"
 	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
