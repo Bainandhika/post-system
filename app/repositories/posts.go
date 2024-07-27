@@ -68,5 +68,5 @@ func (r *postsRepo) Delete(id int) error {
 }
 
 func (r *postsRepo) ReplaceAssociation(postData models.Post, newTags []models.Tag) error {
-	return r.DB.Model(&postData).Association("tags").Replace(newTags)
+	return r.DB.Model(&postData).Association("Tags").Replace(newTags)
 }
