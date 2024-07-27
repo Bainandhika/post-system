@@ -1,0 +1,53 @@
+package connections
+
+import (
+	"fmt"
+	"log"
+	"os"
+	"post-system/app/configs"
+	"post-system/lib/models"
+	"time"
+
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+)
+
+func InitDB() error {
+	dbConfig := configs.DB
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable",
+		dbConfig.Host, dbConfig.User, dbConfig.Password, dbConfig.Name, dbConfig.Port)
+
+	fileName := configs.App.LogPath + "/invoice-system.log"
+	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	gormLogger := logger.New(
+		log.New(file, "\r\n", log.LstdFlags), // io writer
+		logger.Config{
+			SlowThreshold:             time.Second, // Slow SQL threshold
+			LogLevel:                  logger.Info, // Log level
+			IgnoreRecordNotFoundError: true,        // Ignore ErrRecordNotFound error for logger
+			ParameterizedQueries:      true,        // Don't include params in the SQL log
+			Colorful:                  false,       // Disable color
+		},
+	)
+
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		PrepareStmt: true,
+		Logger:      gormLogger,
+	})
+	if err != nil {
+		return err
+	}
+
+	err = db.AutoMigrate(&models.Post{}, &models.Tag{})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
