@@ -1,54 +1,44 @@
-# Post System
+# articles-system
 
-This is a simple RESTful API for managing posts using GoLang, Gorilla Mux, and GORM.
+## Description
+This is a simple web-API for managing posts. This allows CRUD functions of posts
 
-## Getting Started
+## Needed Stacks
+1. Golang (Gin)
+2. PostgreSQL
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+## Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Bainandhika/post-system
+   cd post-system
+   ```
+2. Install dependencies:
+   ```bash
+   go mod tidy
+   ```
+3. Prepare the .env file:
+   Create a .env file in the project root directory with the following content:
+   ```env
+   APP_HOST=localhost
+   APP_PORT=8000
+   APP_LOG_PATH=logs
 
-### Prerequisites
+   DATABASE_HOST=localhost
+   DATABASE_PORT=5432
+   DATABASE_USER=admin
+   DATABASE_PASSWORD=
+   DATABASE_NAME=post_system
+   ```
+4. Build the executable:
+   ```bash
+   go build
+   ```
+5. Make sure PostgreSQL is running database is already created. Then run the application:
+   ```bash
+   ./main
+   ```
+6. Log files stored at post-system/logs
 
-- GoLang
-- Gin
-- GORM
-- PostgreSQL
-
-### Installing
-
-Clone the repository:
-git clone https://github.com/your-username/post-system.git
-
-Navigate to the project directory:
-cd post-system
-
-Install the required packages:
-go mod tidy
-
-### Configuration
-Create a .env file in the root of the project and add your database credentials:
-APP_HOST=localhost
-APP_PORT=8000
-APP_LOG_PATH=logs
-
-DATABASE_HOST=localhost
-DATABASE_PORT=5432
-DATABASE_USER=admin
-DATABASE_PASSWORD=
-DATABASE_NAME=post_system
-
-### Running the application
-Build and run the application:
-go build -o main
-./main
-
-The application will start listening on localhost:8080.
-
-### API Endpoints
-GET /api/posts: Get all posts
-POST /api/posts: Create a new post
-GET /api/posts/{id}: Get a post by ID
-PUT /api/posts/{id}: Update a post by ID
-DELETE /api/posts/{id}: Delete a post by ID
-
-### Authors
-Bainandhika
+## Author
+M. Bainandhika Baghaskara Putra - https://github.com/Bainandhika
